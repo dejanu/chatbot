@@ -35,7 +35,7 @@ Tooling and technologies used in Synergy:
 - Grafana for visualization
 - Opensearch for distributed analytics search engine and log aggregation
 - Opensearch Dashboard, which is a frontend for querying for application logs. It both supports ad hoc queries as well as dashboards
-- Vault used as anidentity-based secret and encryption management system, to manage and protect your secrets in dynamic infrastructure (e.g. database credentials, passwords, API keys)
+- Vault used as an identity-based secret and encryption management system, to manage and protect your secrets in dynamic infrastructure (e.g. database credentials, passwords, API keys)
 
 Logging tooling and flow used in Synergy, consists of Fluendbit, Fluentd, and Opensearch.
 Fluent-bit is a daemonset (one on each node) that tails container logs and decorates with Kubernetes metadata.These forward to Fluentd which will buffer and send to Elasticsearch including some filtering/manipulation afaik

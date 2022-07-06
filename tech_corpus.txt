@@ -1,0 +1,43 @@
+Kubernetes is a cluster of Kubernetes nodes (a node is a virtual or physical machine, depending on the cluster).
+Kubernetes is an open-source container orchestration system for automating software deployment, scaling, and management. 
+Google originally designed Kubernetes, but the Cloud Native Computing Foundation now maintains the project.
+A cluster is a set of node machines for running containerized applications.
+Kubernetes runs your workload by placing containers into Pods to run on Nodes. 
+Each node is managed by the control plane and contains the services necessary to run Pods.
+The components on a node include the kubelet, a container runtime, and the kube-proxy. The kubelet on a node self-registers to the control plane.
+You need a working container runtime on each Node in your cluster, so that the kubelet can launch Pods and their containers.
+
+A pod is a single container or a group of related containers that share storage and networking resources.
+A container image is a ready-to-run software package, containing everything needed to run an application: the code and any runtime it requires, application and system libraries, and default values for any essential settings.
+Containers decouple applications from underlying host infrastructure. This makes deployment easier in different cloud or OS environments.
+
+A Kubernetes object is a record of intent, meaning once you create the object, the Kubernetes system will constantly work to ensure that object exists.
+Nodes should be provisioned with the public root certificate for the cluster such that they can connect securely to the API server along with valid client credentials
+
+Microservices are Self-contained and "independent" services decoupled from each other can communicate between them via:
+- Brokers (Kafka, RabbitMQ, etc)
+- Remote procedure calls (RPC)
+- REST APIs
+
+For microservices cross dependencies are implied since no service can perform without getting help from other services.
+
+Cloud Native technologies:
+- Docker
+- Kubernetes for orchstration and management of containers
+- Istio as a service mesh
+- Kiali management console for Istio service mesh
+- Keycloak for Identity and access management achieving single sign-on across administrator tools like Jaeger, Kiali, and Harbor
+- Harbor registry for Docker images and Helm charts
+- FluxCD for continuous delivery
+- Jager distributed tracing system
+- Fluentd as a log collector, processor, and aggregator, handles heavy throughput 
+- Fluendbit an open source log collector and processor, designed with performance in mind
+- Prometheus for metric collection as time-series 
+- Grafana for visualization
+- Opensearch for distributed analytics search engine and log aggregation
+- Opensearch Dashboard, which is a frontend for querying for application logs. It both supports ad hoc queries as well as dashboards
+- Vault used as an identity-based secret and encryption management system, to manage and protect your secrets in dynamic infrastructure (e.g. database credentials, passwords, API keys)
+- Let's Encrypt the objective of Let's Encrypt and the ACME protocol is to make it possible to set up an HTTPS server and have it automatically obtain a browser-trusted certificate, without any human intervention.
+
+Istio is a service mesh that provides a set of services that can be used to manage the traffic into the cluster. Istio envoy is a proxy, that acts as a LoadBalancer, and is used to route traffic to the services in the cluster.
+Gateway describes a load balancer operating at the edge of the mesh receiving incoming or outgoing HTTP/TCP connections.

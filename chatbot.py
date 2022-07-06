@@ -22,7 +22,7 @@ raw_doc=raw_doc.lower()
 # download all the nltk data: will be saved ~/nltk_data
 nltk.download('all')
 # using the Punk tokenizer
-#nltk.download('punkt')
+nltk.download('punkt')
 # using the WordNet dictionary
 nltk.download('wordnet')
 
