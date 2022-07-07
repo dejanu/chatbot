@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
+from asyncore import read
 import nltk
 import numpy as np
 import random
 import string
-import re
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -14,17 +14,9 @@ from sklearn.feature_extraction import text
 # divide our text into sentences and words since the cosine similarity of the user 
 # input (of the vectorized form of the input sentence) will actually be compared with each sentence
 
-# import corpus
-f=open('tech_corpus.txt','r',errors='ignore')
-raw_doc=f.read()
-f.close()
-
-# convert to lowercase
-raw_doc=raw_doc.lower()
-
-# remove special characters and empty spaces
-raw_doc = re.sub(r'\[[0-9]*\]', ' ', raw_doc)
-raw_doc = re.sub(r'\s+', ' ', raw_doc)
+from corpusreader import read_corpus, read_corpus_words
+raw_doc=read_corpus('incidents_corpus.txt')
+# read_corpus_words('incidents_corpus.txt')
 
 # divide text into sentences and words
 # cosine similarity of the user inout will actually be compared with each sentence
@@ -57,7 +49,7 @@ def generate_response(user_input):
     RuleRobo_response = ''
     article_sentences.append(user_input)
 
-    my_additional_stop_words = ['-','.',':','!','?','ha', 'le', 'u', 'wa']
+    my_additional_stop_words = ['-',';','.',':','!','?','ha', 'le', 'u', 'wa']
     word_vectorizer = TfidfVectorizer(tokenizer=get_processed_text, stop_words=text.ENGLISH_STOP_WORDS.union(my_additional_stop_words))
     all_word_vectors = word_vectorizer.fit_transform(article_sentences)
     similar_vector_values = cosine_similarity(all_word_vectors[-1], all_word_vectors)
