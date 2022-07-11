@@ -1,17 +1,18 @@
-Vault is sealed you can try to check the logs (kubectl logs -n vault vault-0) check vault status (using vaultstatus command) and unseal the vault (./invoke-bundle-action.sh synergy-core unseal-vault).
+Vault is sealed you can try to check the logs (kubectl logs -n vault vault-0) check vault status using (vaultstatus) and unseal the vault (./invoke-bundle-action.sh synergy-core unseal-vault).
 
 Opensearch is down you can try to check if the logging services are running (kubectl -n logging get po) and opensearch master logs (kubectl logs opensearch-cluster-master-0 -n logging --tail=100).
 Opensearch dashboards return 503 Service Unavailabe you can try to restart Opensearch dashboards (kubectl -n logging rollout restart deployment opensearch-dashboards).
 
-Harbor registry is down you can try to check the logs (kubectl -n harbor get po) and events (kubectl -n harbor describe po harbor-registry-<podname_uid>).
-Harbor registry peristent volume is full edit the installer synergy_home/installation-resources/synergy-bootstrap/harbor-values.yaml file with the desired size update the budle (./invoke-bundle-action.sh synergy-bootstrap update) and scale the deployment (kubectl -n harbor scale deployment harbor-registry --replicas=0).
-
 Logs are missing you can try to delete fluentbit and fluentd to clear their caches which may be holding up the entire log pipeline (kubectl -n logging delete po -l app.kubernetes.io/instance=fluent-bit).
 Logs are not collected you can try to delete fluentbit and fluentd to clear their caches which may be holding up the entire log pipeline (kubectl -n logging delete po -l app.kubernetes.io/instance=fluent-bit).
 
+Harbor registry is down you can try to check the logs (kubectl -n harbor get po) and events (kubectl -n harbor describe po harbor-registry-<podname_uid>).
+Harbor registry peristent volume is full edit the installer synergy_home/installation-resources/synergy-bootstrap/harbor-values.yaml file with the desired size update the bundle (./invoke-bundle-action.sh synergy-bootstrap update) and scale the deployment (kubectl -n harbor scale deployment harbor-registry --replicas=0).
+
 Tenants cannot login into cluster you can try to check if vault is working (kubectl -n vault get po).
 
-Node CPU alert you can try to check nodes resource utilization (kubectl top nodes).
+Node CPU alert you can try to check nodes resource utilization (kubectl top nodes) and check node pod alocation (knode_pods).
 
-Certificates are expired you can try to check private registry certs (openssl s_client -connect private)registry_fqdn:5443 -showcerts|openssl x509 -noout -dates) and cluster certs (openssl x509 -in fullchain.cer -noout -dates) with respect to certificates location, also you can sync the certificate and the key into the cluster (./invoke-bundle-action.sh synergy-istio sync-ssl-certificate).
+Certificates are expired you can try to check private registry certs (openssl s_client -connect private_registry_fqdn:5443 -showcerts|openssl x509 -noout -dates) and cluster certs (openssl x509 -in fullchain.cer -noout -dates) with respect to certificates location, also you can generate new ones (issue-cluster-certificate-acme-azuredns.sh|issue-cluster-certificate-acme-powerdns.sh|issue-registry-certificate-acme-azuredns.sh|issue-registry-certificate-acme-powerdns.sh) and sync the certificate and the key into the cluster (./invoke-bundle-action.sh synergy-istio sync-ssl-certificate).
 The certificate for the cluster ingress is issued by Let's Encrypt the validity period is only 3 months, please check certificates are expired.
+The certificate for the private registry is expired, renew the certificate and restart docker containers (docker ps -q -f name=synergy-registry | xargs -n 1 docker restart), please check certificates are expired.

@@ -1,18 +1,20 @@
 # General
+
+* NLP - Natural Language Processing : text classification, sentiment-analysis, chatbot, language processing.
 * Types of Conversational Agents:
   * Rule Based ( follow a specific set of rules, not flexible but they give pretty accurate responses )
   * Learning Based:
       * Generative - generate respons on the fly
       * Retrieval-based - retrieve a certain response from corpus
 
-
 # Terms
 
 * Corpus - collection of text documents, is a body of written or spoken material upon which a linguistic analysis is based (mainly used for NLP)
 * Dataset - collection of data 
 * Tokenization - process of breaking a sentence into words
-* Lemmatization - process of finding the base form of a word
-* Stemming - process of reducing a word to its root form, finding similiar words and removing suffixes
+* Stemming - process of reducing a word to its root by removing suffixes
+* Lemmatization - process of finding the base form of a word with the use of a vocabulary and morphological analysis of words, normally aiming to remove inflectional endings only and to return the base or dictionary form of a word, which is known as the lemma
+* Lemmatization takes more time than stemming: lemmatize the word `caring` it returns `care` and stemming returns `car`. Lemmatization is computationally more expensive since it involves look-up tables. Lemmatization and stemming are special cases of normalization. They identify a canonical representative for a set of related word forms.
 * Bag of Words - a vector representation of a document, where each word is represented by a number, and the number is the number of times the word appears in the document
 * Term Frequency (Tf) - number of times a word appears in a document
 * Inverse Document (Idf) Frequency - number of documents in a corpus that contain a word
@@ -51,3 +53,8 @@ LookupError:
 ```bash
  UserWarning: Your stop_words may be inconsistent with your preprocessing. Tokenizing the stop words generated tokens ['ha', 'le', 'u', 'wa'] not in stop_words.
  ```
+
+ * Which is the best stemmer:
+    * Solution: The best stemmer is snowball stemmer. It is a stemmer that is based on the snowball algorithm. It is a good stemmer for English.
+    * [doc](https://www.nltk.org/api/nltk.stem.html#module-nltk.stem.snowball)
+    * [link](https://stackoverflow.com/questions/24647400/what-is-the-best-stemming-method-in-python)

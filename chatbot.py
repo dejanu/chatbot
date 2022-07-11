@@ -23,7 +23,7 @@ raw_doc=raw_doc.lower()
 nltk.download('all')
 # using the Punk tokenizer
 nltk.download('punkt')
-# using the WordNet dictionary
+# using the WordNet dictionary for stemming aka stemmer
 nltk.download('wordnet')
 
 # convert doc to list of sentences and words

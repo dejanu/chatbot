@@ -14,17 +14,15 @@ from sklearn.feature_extraction import text
 # divide our text into sentences and words since the cosine similarity of the user 
 # input (of the vectorized form of the input sentence) will actually be compared with each sentence
 
-from corpusreader import read_corpus, read_corpus_words
+from corpusreader import read_corpus
 raw_doc=read_corpus('incidents_corpus.txt')
-# read_corpus_words('incidents_corpus.txt')
 
 # divide text into sentences and words
-# cosine similarity of the user inout will actually be compared with each sentence
+# cosine similarity of the user input will actually be compared with each sentence
 article_sentences = nltk.sent_tokenize(raw_doc)
 article_words = nltk.word_tokenize(raw_doc)
 
 # remove the punctuation from the user input text and will also lemmatize the text
-# so that the words are in the same form
 wnlemmatizer = nltk.stem.WordNetLemmatizer()
 
 def perform_lemmatization(tokens):
@@ -66,20 +64,20 @@ def generate_response(user_input):
         return RuleRobo_response
 
 continue_dialogue = True
-print("I am RuleRobo. You can ask me any tech question:")
+print("\033[1;32;40m RuleRobo. You can ask me any tech question:")
 while(continue_dialogue == True):
     human_text = input().lower()
     if human_text != 'bye':
         if human_text == 'thanks' or human_text == 'thank you very much' or human_text == 'thank you':
             continue_dialogue = False
-            print("RuleRobo: Most welcome")
+            print("\033[1;32;40m RuleRobo: Most welcome")
         else:
             if generate_greeting_response(human_text) != None:
-                print("RuleRobo: " + generate_greeting_response(human_text))
+                print("\033[1;32;40m RuleRobo: " + generate_greeting_response(human_text))
             else:
-                print("RuleRobo: ", end="")
+                print("\033[1;32;40m RuleRobo: ", end="")
                 print(generate_response(human_text))
                 article_sentences.remove(human_text)
     else:
         continue_dialogue = False
-        print("RuleRobo: Good bye...")
+        print("\033[1;32;40m RuleRobo: Good bye...")
