@@ -8,6 +8,8 @@ import os
 
 # keyword extractor
 from rake_nltk import Rake
+from nltk.corpus import stopwords
+
 from nltk.probability import FreqDist
 from nltk.tokenize import sent_tokenize
 
@@ -26,8 +28,7 @@ def read_corpus(filename):
 
 def corpus_keyword_detector(filename):
     """
-    Read corpus and generate the domain-specific lexicon.
-    """
+    Read corpus and generate the domain-specific knowledge base."""
     with open(os.path.join('datasets', filename), 'r', errors='ignore') as f:
         raw_doc=f.read()
 
@@ -39,18 +40,20 @@ def corpus_keyword_detector(filename):
 
         # Extraction given the list of strings where each string is a sentence.
         # r.extract_keywords_from_sentences(sent_tokenize(raw_doc))
-
+        keywords_list=[]
         for sentence in sent_tokenize(raw_doc):
-            print(sentence)
             r.extract_keywords_from_text(sentence)
+            # print(f"{r.get_ranked_phrases()[0]}\n---------")
+            
+            # append highest ranked word to the list
+            keywords_list.append(r.get_ranked_phrases()[0])
+        return keywords_list
+        # # Get the keyword scores in descending order.
+        # keywords = r.get_ranked_phrases()
+        # # Get keyword phrases ranked with scores, highest to lowest.
+        # keywords_with_scores = r.get_ranked_phrases_with_scores()
+        # print(keywords)
 
-        # Get the keyword scores in descending order.
-        keywords = r.get_ranked_phrases()
-
-        # Get keyword phrases ranked with scores, highest to lowest.
-        keywords_with_scores = r.get_ranked_phrases_with_scores()
-
-        print(keywords)
 
 if __name__ == "__main__":
 

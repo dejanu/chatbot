@@ -15,7 +15,10 @@ from sklearn.feature_extraction import text
 # input (of the vectorized form of the input sentence) will actually be compared with each sentence
 
 from corpusreader import read_corpus
+from corpusreader import corpus_keyword_detector
+
 raw_doc=read_corpus('incidents_corpus.txt')
+corpus_keywords = corpus_keyword_detector('incidents_corpus.txt')
 
 # divide text into sentences and words
 # cosine similarity of the user input will actually be compared with each sentence
@@ -58,13 +61,13 @@ def generate_response(user_input):
     vector_matched = matched_vector[-2]
 
     if vector_matched == 0:
-        return f"{RuleRobo_response} could you please rephrase it..."
+        return f'{RuleRobo_response} could you please rephrase it...my domain knowledge is limited to {",".join(corpus_keywords)}'
     else:
         RuleRobo_response = RuleRobo_response + article_sentences[similar_sentence_number]
         return RuleRobo_response
 
 continue_dialogue = True
-print("\033[1;32;40m RuleRobo. You can ask me any tech question:")
+print(f'\033[1;32;40m RuleRobo. Ask me any corpus related question...my domain knowledge is limited to {",".join(corpus_keywords)} \033[0m')
 while(continue_dialogue == True):
     human_text = input().lower()
     if human_text != 'bye':
