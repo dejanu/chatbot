@@ -16,14 +16,16 @@
 * Lemmatization - process of finding the base form of a word with the use of a vocabulary and morphological analysis of words, normally aiming to remove inflectional endings only and to return the base or dictionary form of a word, which is known as the lemma
 * Lemmatization takes more time than stemming: lemmatize the word `caring` it returns `care` and stemming returns `car`. Lemmatization is computationally more expensive since it involves look-up tables. Lemmatization and stemming are special cases of normalization. They identify a canonical representative for a set of related word forms.
 * Bag of Words - a vector representation of a document, where each word is represented by a number, and the number is the number of times the word appears in the document
-* Term Frequency (Tf) - number of times a word appears in a document
-* Inverse Document (Idf) Frequency - number of documents in a corpus that contain a word
+* Term Frequency (Tf) - number of times a word appears in a document aka Keyword extraction
+* Inverse Document (Idf) Frequency - number of documents in a corpus that contain a word.
+, measure as measured as log(total number of sentences / Number of sentences with term t)
 * Fallback Rate (FBR) - number of times when the bot is unable to answer a question and falls back to a default response "Sorry, I don't understand"
+* Intent - a goal or purpose of a conversation
 
 # Implementation
 
 * TfidfVectorizer - Convert a collection of raw documents to a matrix of TF-IDF features.
-* Term Frequency and Inverse Document Frequency is one of the most important techniques used for information retrieval to represent how important a specific word or phrase is to a given document.
+* Term Frequency and Inverse Document Frequency is a text vectorization techniques used for information retrieval to represent how important a specific word or phrase is to a given document.
 * Tfidf is a BoW(bag of words) algorithm that can help you identify the intent, but not relation between those intents.
 * The matrix that is obtained from vectorized tfidf along with the label will just tell the machine that if for some text, similar matrix is obtained, this is the label. Which is handy in classification, but not for chatbot responses.
 * Flow to get a response from the chatbot:
@@ -33,6 +35,10 @@
     * Get the index of the most similar text from the corpus
     * Get the response from the corpus at the index
     * Return the response
+
+# Keyword Extraction
+    * BoWC (Bag of Weighted Concepts) - creates concepts by clustering word vectors (embedding)
+    * keywords extraction methods: Rake `pip install rake-nltk`, Yake, Keybert, and Textrank (methods to extract keywords from a single text)
 
 # Issues
 
