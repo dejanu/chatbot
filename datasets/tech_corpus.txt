@@ -39,5 +39,19 @@ Cloud Native technologies:
 - Vault used as an identity-based secret and encryption management system, to manage and protect your secrets in dynamic infrastructure (e.g. database credentials, passwords, API keys)
 - Let's Encrypt the objective of Let's Encrypt and the ACME protocol is to make it possible to set up an HTTPS server and have it automatically obtain a browser-trusted certificate, without any human intervention.
 
-Istio is a service mesh that provides a set of services that can be used to manage the traffic into the cluster. Istio envoy is a proxy, that acts as a LoadBalancer, and is used to route traffic to the services in the cluster.
+
+Getting external traffic into your cluster can be achieved using the Service Kubernetes object or Ingress (which is  probably the most powerful way to expose your services, but can also be the most complicated).
+To expose traffic we need a Ingress Controller (e.g. Istio) + Ingress rules.
+There are many types of Ingress controllers, from the Google Cloud Load Balancer, Nginx, Contour, Istio, and more. 
+Istio is a service mesh that provides a set of services that can be used to manage the traffic into the cluster. 
+Istio envoy is a proxy, that acts as a LoadBalancer, and is used to route traffic to the services in the cluster.
+Istio uses gateway instead of ingress.
 Gateway describes a load balancer operating at the edge of the mesh receiving incoming or outgoing HTTP/TCP connections.
+
+cert-manager (plugin for Ingress controllers) that can automatically provision SSL certificates for your services.
+Let's Encrypt issues the Certs (the certificate for the cluster ingress is issued by Let's Encrypt the validity period is only 3 months) using ACME protocol.
+
+Fluentbit is a daemonset (one on each node) that tails container logs and decorates with Kubernetes metadata.These forward to fluentd which will buffer and send to Elasticsearch including some filtering/manipulation.
+
+Tenant represents the ability of having multiple independent parties co-located within the same environment. A tenant is represented by a single kubernetes namespace where all applications for the tenant is to be deployed.
+Another purpose of a tenant is to encourage a Gitops (e.g Flux/Argo) deployment model.
