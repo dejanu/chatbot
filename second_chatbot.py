@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from asyncore import read
 import nltk
 import numpy as np
 import random
@@ -11,17 +10,31 @@ from sklearn.metrics.pairwise import cosine_similarity
 # extend stop words
 from sklearn.feature_extraction import text
 
-# divide our text into sentences and words since the cosine similarity of the user 
-# input (of the vectorized form of the input sentence) will actually be compared with each sentence
+# # disable SSL check no goood
+# import ssl
+# try:
+#     _create_unverified_https_context = ssl._create_unverified_context
+# except AttributeError:
+#     pass
+# else:
+#     ssl._create_default_https_context = _create_unverified_https_context
+
 
 from corpusreader import read_corpus
 from corpusreader import corpus_keyword_detector
 
-raw_doc=read_corpus('incidents_corpus.txt')
-corpus_keywords = corpus_keyword_detector('incidents_corpus.txt')
+raw_doc=read_corpus('tech_corpus.txt')
+corpus_keywords = corpus_keyword_detector('tech_corpus.txt')
 
-# divide text into sentences and words
-# cosine similarity of the user input will actually be compared with each sentence
+# download all the nltk data: will be saved ~/nltk_data
+nltk.download('all')
+# # using the Punk tokenizer
+# nltk.download('punkt')
+
+# using the WordNet dictionary for stemming and lemming
+nltk.download('wordnet')
+nltk.download('stopwords')
+
 article_sentences = nltk.sent_tokenize(raw_doc)
 article_words = nltk.word_tokenize(raw_doc)
 

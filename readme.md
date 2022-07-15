@@ -66,7 +66,10 @@ LookupError:
     * [link](https://stackoverflow.com/questions/24647400/what-is-the-best-stemming-method-in-python)
 
 
-* Cloud Implementations:
+* Dockerfile build:
+    * installing numpy `raise RuntimeError("Broken toolchain: cannot link a simple C program")` solved by changing the baseimage `FROM python:3.8-slim`
+
+# Cloud Implementations:
     * https://www.youtube.com/watch?v=bxF2LWZcUR8&t=92s
     * https://docs.microsoft.com/en-us/power-virtual-agents/teams/fundamentals-get-started-teams
-    
+

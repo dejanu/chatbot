@@ -10,8 +10,14 @@ import os
 from rake_nltk import Rake
 from nltk.corpus import stopwords
 
+
 from nltk.probability import FreqDist
 from nltk.tokenize import sent_tokenize
+
+import nltk
+nltk.download('stopwords')
+nltk.download('all')
+nltk.download('punkt')
 
 def read_corpus(filename):
     """
@@ -57,4 +63,4 @@ def corpus_keyword_detector(filename):
 
 if __name__ == "__main__":
 
-    corpus_keyword_detector(filename='incidents_corpus.txt')
+    corpus_keyword_detector(filename='tech_corpus.txt')
