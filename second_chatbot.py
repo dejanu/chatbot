@@ -33,7 +33,7 @@ nltk.download('all')
 
 # using the WordNet dictionary for stemming and lemming
 nltk.download('wordnet')
-nltk.download('stopwords')
+
 
 article_sentences = nltk.sent_tokenize(raw_doc)
 article_words = nltk.word_tokenize(raw_doc)
