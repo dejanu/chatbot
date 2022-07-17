@@ -7,9 +7,9 @@ FROM python:3.8-slim
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
 RUN pip install -r requirements.txt
-COPY datasets ./datasets
-COPY second_chatbot.py .
-COPY corpusreader.py .
+# COPY datasets ./datasets
+RUN mkdir datasets
+COPY second_chatbot.py corpusreader.py .
+VOLUME /app/datasets
 
-CMD ["./second_chatbot.py"]
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python","./second_chatbot.py"]

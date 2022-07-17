@@ -19,10 +19,18 @@ nltk.download('stopwords')
 nltk.download('all')
 nltk.download('punkt')
 
-def read_corpus(filename):
+def read_corpus(image=False, filename=None):
     """
     Read corpus from datasets dir and return the raw text.
     """
+    # raise error if datasets dir does not exist
+    if not os.path.exists('datasets'):
+        raise FileNotFoundError('Dataset directory not found.')
+    
+    if image==True:
+        # filename is the only file from datasets dir
+        filename = os.listdir('datasets')[0]
+
     with open(os.path.join('datasets', filename), 'r', errors='ignore') as f:
         raw_doc=f.read()
         # convert to lowercase
@@ -32,9 +40,13 @@ def read_corpus(filename):
         raw_doc = re.sub(r'\s+', ' ', raw_doc)
         return raw_doc
 
-def corpus_keyword_detector(filename):
+def corpus_keyword_detector(image=False,filename=None):
     """
     Read corpus and generate the domain-specific knowledge base."""
+    if image==True:
+        # filename is the only file from datasets dir
+        filename = os.listdir('datasets')[0]
+
     with open(os.path.join('datasets', filename), 'r', errors='ignore') as f:
         raw_doc=f.read()
 
@@ -62,5 +74,5 @@ def corpus_keyword_detector(filename):
 
 
 if __name__ == "__main__":
-
     corpus_keyword_detector(filename='tech_corpus.txt')
+    

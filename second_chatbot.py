@@ -23,8 +23,11 @@ from sklearn.feature_extraction import text
 from corpusreader import read_corpus
 from corpusreader import corpus_keyword_detector
 
-raw_doc=read_corpus('tech_corpus.txt')
-corpus_keywords = corpus_keyword_detector('tech_corpus.txt')
+# raw_doc=read_corpus('tech_corpus.txt')
+# corpus_keywords = corpus_keyword_detector('tech_corpus.txt')
+
+raw_doc=read_corpus(image=True)
+corpus_keywords = corpus_keyword_detector(image=True)
 
 # download all the nltk data: will be saved ~/nltk_data
 nltk.download('all')

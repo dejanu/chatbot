@@ -73,3 +73,5 @@ LookupError:
     * https://www.youtube.com/watch?v=bxF2LWZcUR8&t=92s
     * https://docs.microsoft.com/en-us/power-virtual-agents/teams/fundamentals-get-started-teams
 
+# Chatbot image:
+    * Start chatbot: `docker run -v $PWD/datasets:/app/datasets -itu 0 dejanualex/chatbot:2.0 bash`
