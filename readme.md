@@ -58,7 +58,7 @@ LookupError:
     * Solution: The reason is that you have used custom tokenizer and used default stop_words='english' so while extracting features a check is made to see if there is any inconsistency between stop_words and tokenizer. [link](https://stackoverflow.com/questions/60280307/tokenizing-the-stop-words-generated-tokens-ha-le-u-wa-not-in-stop-w)
 ```bash
  UserWarning: Your stop_words may be inconsistent with your preprocessing. Tokenizing the stop words generated tokens ['ha', 'le', 'u', 'wa'] not in stop_words.
- ```
+```
 
  * Which is the best stemmer:
     * Solution: The best stemmer is snowball stemmer. It is a stemmer that is based on the snowball algorithm. It is a good stemmer for English.
