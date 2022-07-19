@@ -11,5 +11,4 @@ RUN pip install -r requirements.txt
 COPY second_chatbot.py corpusreader.py .
 RUN mkdir datasets
 VOLUME /app/datasets
-
 ENTRYPOINT ["python","./second_chatbot.py"]

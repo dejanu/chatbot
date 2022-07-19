@@ -22,8 +22,8 @@ from sklearn.feature_extraction import text
 from corpusreader import read_corpus
 from corpusreader import corpus_keyword_detector
 
-# raw_doc=read_corpus(filename='incidents_corpus.txt')
-# corpus_keywords = corpus_keyword_detector(filename='incidents_corpus.txt')
+# raw_doc=read_corpus(filename='tech_corpus.txt')
+# corpus_keywords = corpus_keyword_detector(filename='tech_corpus.txt')
 
 raw_doc=read_corpus(image=True)
 corpus_keywords = corpus_keyword_detector(image=True)
