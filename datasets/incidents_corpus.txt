@@ -1,18 +1,70 @@
-Vault is sealed you can try to check the logs (kubectl logs -n vault vault-0) check vault status using (vaultstatus) and unseal the vault (./invoke-bundle-action.sh synergy-core unseal-vault).
+1. Configuring external authentication providers: Our users are managed in our own identity provider - how do we integrate with this to give users access using their company credentials?
+All the Synergy tools require authentication and authorization in order to gain access. This is handled by a Keycloak instance within the cluster which is trusted by the applications and configured with the roles that the applications expects.
+Keycloak supports different realms for different purposes, and by default has a 'synergy' realm which is used by the tools. This realm can be configured with external authentication providers to federate users as well as their access to Synergy tools.
+In the [installation package]/conf/synergy-config.yaml file, there is a keycloak admin name and password, use these to log in to keycloak and configure the identity provider. It is possible to configure identity providers directly in [installation package]/installation-resources/synergy-core/keycloak-realm-config-synergy.yaml but that requires technical knowledge about how the configuration are mapped to the file. If you need to apply the same in multiple clusters or you just want it to be exported in case the cluster is to be recreated, then the config can be exported manually and added to the existing configuration file.
+Log in to https://idp.admin.<cluster-basedomain>/auth/admin with the keycloak administrator credentials from the configuration file.
+Select the "Synergy" realm in the dropdown in the top left corner
+Select "Identity Providers" in the menu on the left
+Add a provider from the dropdown and select the one that best suits your needs. If you are integrating with Azure AD, then you can select either SAML or OpenID Connect depending on your company preferences.
+When the identity provider is created, go to the "Mappers" tab of the identity provider to configure how names and groups are mapped to Synergy.
+You may need to login with a user first to see how much works out of the box. When a user is logged in, the user is created in Keycloak and can be found under "Users" with the roles and attributes resolved. Whether these things are updated on next login, depends on the "Sync mode" set on the identity provider or the "Sync mode override" on each mapper. Deleting the user will recreate the user from scratch at next login.
+An example of a SAML integration with Microsoft Azure Active Directory requires 2 mappers to be configured for mapping the name and a mapper for each role you would like to map.Read more about how to configure different identity providers in the Keycloak documentation: https://www.keycloak.org/docs/latest/server_admin/#_identity_broker
 
-Opensearch is down you can try to check if the logging services are running (kubectl -n logging get po) and opensearch master logs (kubectl logs opensearch-cluster-master-0 -n logging --tail=100).
-Opensearch dashboards return 503 Service Unavailabe you can try to restart Opensearch dashboards (kubectl -n logging rollout restart deployment opensearch-dashboards).
+2. Persistent volume is full (Harbor registry): An application reports that its disk is full
+In general the actions that needs to be taken is to increase the requested amount of storage in the "persistent-volume-claim" and then stop the application while the volume is being resized and then start it again.
+Where and how to change the persistent-volume-claim depends on the application. The following steps describe how to increase the storage for the docker registry (Harbor).
+From installation folder on deployment server do:
+- Edit the installer/installation-resources/synergy-bootstrap/harbor-values.yaml file
+- Add the code snippet below to override the default values and adjust accordingly Update the size for the registry
+- Execute ./invoke-bundle-action.sh synergy-bootstrap update
+- Scale the registry to zero, to allow the volume to be resized and mounted: kubectl -n harbor scale deployment harbor-registry --replicas=0
+- Monitor resize progres: kubectl -n harbor get pvc harbor-registry -o yaml
+- When status has a type called 'FileSystemResizePending' restart the service by scaling the deployment (assumes that the registry was previously running with a single replica): kubectl -n harbor scale deployment harbor-registry --replicas=1
 
-Logs are missing you can try to delete fluentbit and fluentd to clear their caches which may be holding up the entire log pipeline (kubectl -n logging delete po -l app.kubernetes.io/instance=fluent-bit).
-Logs are not collected you can try to delete fluentbit and fluentd to clear their caches which may be holding up the entire log pipeline (kubectl -n logging delete po -l app.kubernetes.io/instance=fluent-bit).
+3. OpenSearch Dashboards always returns Unauthorized instead of allowing the user to log in?
+If the OpenSearch Dashboards application is started while Keycloak was unavailable, the OpenSearch Dashboards will receive "503 Service Unavailable" from Keycloak, which causes the security plugin to not be configured properly, and currently OpenSearch Dashboards do not report this during its health check and therefore do not recover automatically.
+Restart OpenSearch Dashboards using the command: kubectl -n logging rollout restart deployment opensearch-dashboards.
 
-Harbor registry is down you can try to check the logs (kubectl -n harbor get po) and events (kubectl -n harbor describe po harbor-registry-<podname_uid>).
-Harbor registry peristent volume is full edit the installer synergy_home/installation-resources/synergy-bootstrap/harbor-values.yaml file with the desired size update the bundle (./invoke-bundle-action.sh synergy-bootstrap update) and scale the deployment (kubectl -n harbor scale deployment harbor-registry --replicas=0).
+4. OpenSearch fails to store log as data node disk is full (OpenSearch Dashboards is unable to perform searches).
+The OpenSearch data nodes are configured using a statefulset meaning that resizing the data disk requires an approach a bit different from the one outlined in Persistent volume is full.
+From the installation folder on deployment server do:
+- Edit the (copy of) installation-resources/synergy-logging/opensearch-data-values.yaml file. Add the code snippet below to override the default values, specifying the new size:
+persistence:
+  size: 20Gi
+- For each data pod in the opensearch-cluster-data  statefulset do the following (replace <ordinal> with the id of the replica being resized):
+Delete the statefulset to allow modifying the Persistent Volume Claim and taking pods offline: kubectl -n logging delete statefulset opensearch-cluster-data --cascade=orphan. Modify the Persistent Volume Claim to request the new size by running: (If it is for the master node, then it is opensearch-cluster-master-opensearch-cluster-master-<ordinal>):
+kubectl -n logging patch persistentvolumeclaim opensearch-cluster-data-opensearch-cluster-data-<ordinal> --patch '
+spec:
+  resources:
+    requests:
+      storage: 20Gi
+- Stop the pod that's using the PVC to allow the underlying disk provisioner to scale the disk: kubectl -n logging delete pod opensearch-cluster-data-<ordinal>
+- When the Persistent Volume Claim has status 'FileSystemResizePending' recreate the statefulset using: ./invoke-bundle-action.sh synergy-logging update
 
-Tenants cannot login into cluster you can try to check if vault is working (kubectl -n vault get po).
+5. Harbor registry is down you can try to check the logs (kubectl -n harbor get po) and events (kubectl -n harbor describe po harbor-registry-<podname_uid>). Harbor registry peristent volume is full edit the installer synergy_home/installation-resources/synergy-bootstrap/harbor-values.yaml file with the desired size update the bundle (./invoke-bundle-action.sh synergy-bootstrap update) and scale the deployment (kubectl -n harbor scale deployment harbor-registry --replicas=0).
 
-Node CPU alert you can try to check nodes resource utilization (kubectl top nodes) and check node pod alocation (knode_pods).
+6. Vault is sealed you can try to check the logs (kubectl logs -n vault vault-0) check vault status using (vaultstatus) and unseal the vault (./invoke-bundle-action.sh synergy-core unseal-vault).
 
-Certificates are expired you can try to check private registry certs (openssl s_client -connect private_registry_fqdn:5443 -showcerts|openssl x509 -noout -dates) and cluster certs (openssl x509 -in fullchain.cer -noout -dates) with respect to certificates location, also you can generate new ones (issue-cluster-certificate-acme-azuredns.sh|issue-cluster-certificate-acme-powerdns.sh|issue-registry-certificate-acme-azuredns.sh|issue-registry-certificate-acme-powerdns.sh) and sync the certificate and the key into the cluster (./invoke-bundle-action.sh synergy-istio sync-ssl-certificate).
+7. Logs are missing you can try to delete fluentbit and fluentd to clear their caches which may be holding up the entire log pipeline (kubectl -n logging delete po -l app.kubernetes.io/instance=fluent-bit). Logs are not collected you can try to delete fluentbit and fluentd to clear their caches which may be holding up the entire log pipeline (kubectl -n logging delete po -l app.kubernetes.io/instance=fluent-bit).\
+Check if fluentd and fluent-bit pods are functioning as expected by examining their log output and confirming that new data is received using OpenSearch Dashboards.
+
+8. Tenants cannot login into cluster you can try to check if vault is working (kubectl -n vault get po).
+
+9. Node CPU alert you can try to check nodes resource utilization (kubectl top nodes) and check node pod alocation (knode_pods).
+
+10. Certificates are expired you can try to check private registry certs (openssl s_client -connect private_registry_fqdn:5443 -showcerts|openssl x509 -noout -dates) and cluster certs (openssl x509 -in fullchain.cer -noout -dates) with respect to certificates location, also you can generate new ones (issue-cluster-certificate-acme-azuredns.sh|issue-cluster-certificate-acme-powerdns.sh|issue-registry-certificate-acme-azuredns.sh|issue-registry-certificate-acme-powerdns.sh) and sync the certificate and the key into the cluster (./invoke-bundle-action.sh synergy-istio sync-ssl-certificate).
 The certificate for the cluster ingress is issued by Let's Encrypt the validity period is only 3 months, please check certificates are expired.
 The certificate for the private registry is expired, renew the certificate and restart docker containers (docker ps -q -f name=synergy-registry | xargs -n 1 docker restart), please check certificates are expired.
+
+11. Synergy bundles deployable artifacts are a set of Cloud Native Application Bundles also referred to as just bundles.
+A Synergy release consists of a set of bundles that are installed individually, but in an order that honours the individual dependencies between them. Which bundles are installed, depends on the capabilities that a specific cluster should support, check which bundles are installed using porter list.
+Available bundles (some are mandatory and some are optional):
+The Istio bundle is the first of the mandatory bundles (mandatory). It provides the configuration for properly exposing services in the cluster and the communication and policies for collaborating services.
+The Bootstrap bundle (mandatory). It provides Harbor.
+The Core bundle (mandatory). It provides Keycloak as Identity Provider, Vault, Kubernetes Dashboard (UI for inspecting the cluster) and Synergy Operator and Synergy console
+The GitOps bundle (optional)
+The Monitoring bundle (optional). It provides Prometheus (Metrics gathering), Grafana (Metrics Visualization) and Kiali (Mesh visualization)
+The Logging bundle (optional). It provides Opensearch (Logs aggregation), Opensearch Dashboard (Logs visualization) and Fluentd (Logs processing)
+The Tracing bundle (optional). It provides Jaeger (Distributed tracing)
+The ACME bundle (optional).
+The Knative bundle (optional).

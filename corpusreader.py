@@ -15,9 +15,12 @@ from nltk.probability import FreqDist
 from nltk.tokenize import sent_tokenize
 
 import nltk
+# download all the nltk data: will be saved ~/nltk_data
+# using the Punk tokenizer
 nltk.download('stopwords')
 nltk.download('all')
 nltk.download('punkt')
+nltk.download('wordnet')
 
 def read_corpus(image=False, filename=None):
     """

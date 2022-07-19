@@ -19,24 +19,14 @@ from sklearn.feature_extraction import text
 # else:
 #     ssl._create_default_https_context = _create_unverified_https_context
 
-
 from corpusreader import read_corpus
 from corpusreader import corpus_keyword_detector
 
-# raw_doc=read_corpus('tech_corpus.txt')
-# corpus_keywords = corpus_keyword_detector('tech_corpus.txt')
+# raw_doc=read_corpus(filename='incidents_corpus.txt')
+# corpus_keywords = corpus_keyword_detector(filename='incidents_corpus.txt')
 
 raw_doc=read_corpus(image=True)
 corpus_keywords = corpus_keyword_detector(image=True)
-
-# download all the nltk data: will be saved ~/nltk_data
-nltk.download('all')
-# # using the Punk tokenizer
-# nltk.download('punkt')
-
-# using the WordNet dictionary for stemming and lemming
-nltk.download('wordnet')
-
 
 article_sentences = nltk.sent_tokenize(raw_doc)
 article_words = nltk.word_tokenize(raw_doc)
