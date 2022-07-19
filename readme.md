@@ -74,4 +74,6 @@ LookupError:
     * https://docs.microsoft.com/en-us/power-virtual-agents/teams/fundamentals-get-started-teams
 
 # Chatbot image:
-    * Start chatbot: `docker run -v $PWD/datasets:/app/datasets -itu 0 dejanualex/chatbot:2.0 bash`
+    * Docker registry [here](https://hub.docker.com/r/dejanualex/chatbot)
+    * K8s embeded corpus: `docker run -itu 0  dejanualex/chatbot:1.0 bash`
+    * Plug and play corpus: `docker run -v $PWD/datasets:/app/datasets -itu 0 dejanualex/chatbot:2.0 bash`
