@@ -69,11 +69,13 @@ LookupError:
 * Dockerfile build:
     * installing numpy `raise RuntimeError("Broken toolchain: cannot link a simple C program")` solved by changing the baseimage `FROM python:3.8-slim`
 
-# Cloud Implementations:
+# Usefull links:
     * https://www.youtube.com/watch?v=bxF2LWZcUR8&t=92s
     * https://docs.microsoft.com/en-us/power-virtual-agents/teams/fundamentals-get-started-teams
+    * https://www.kaggle.com/code/alvations/basic-nlp-with-nltk
 
 # Chatbot image:
     * Docker registry [here](https://hub.docker.com/r/dejanualex/chatbot)
     * K8s embeded corpus: `docker run -itu 0  dejanualex/chatbot:1.0 bash`
     * Plug and play corpus: `docker run -v $PWD/datasets:/app/datasets -itu 0 dejanualex/chatbot:2.0 bash`
+

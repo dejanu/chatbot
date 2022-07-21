@@ -22,11 +22,11 @@ from sklearn.feature_extraction import text
 from corpusreader import read_corpus
 from corpusreader import corpus_keyword_detector
 
-# raw_doc=read_corpus(filename='tech_corpus.txt')
-# corpus_keywords = corpus_keyword_detector(filename='tech_corpus.txt')
+raw_doc=read_corpus(filename='tech_corpus.txt')
+corpus_keywords = corpus_keyword_detector(filename='tech_corpus.txt')
 
-raw_doc=read_corpus(image=True)
-corpus_keywords = corpus_keyword_detector(image=True)
+# raw_doc=read_corpus(image=True)
+# corpus_keywords = corpus_keyword_detector(image=True)
 
 article_sentences = nltk.sent_tokenize(raw_doc)
 article_words = nltk.word_tokenize(raw_doc)
