@@ -69,6 +69,10 @@ LookupError:
 * Dockerfile build:
     * installing numpy `raise RuntimeError("Broken toolchain: cannot link a simple C program")` solved by changing the baseimage `FROM python:3.8-slim`
 
+# Data:
+
+* Repo containing small data-sets: [dejanu_DataSets](https://github.com/dejanu/DataSets)
+
 # Usefull links:
     * https://www.youtube.com/watch?v=bxF2LWZcUR8&t=92s
     * https://docs.microsoft.com/en-us/power-virtual-agents/teams/fundamentals-get-started-teams
